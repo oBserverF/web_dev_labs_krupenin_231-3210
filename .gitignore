@@ -1,0 +1,10 @@
+ve
+.pytest_cache
+hw1
+hw2
+lab6_2
+*__pycache__
+*ve
+config.py
+uploads/
+myenv/

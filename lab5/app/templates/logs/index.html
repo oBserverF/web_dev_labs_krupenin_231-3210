@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Журнал посещений</h1>
+
+{% if current_user.is_authenticated and user_role == 'admin' %}
+<p>
+    <a href="{{ url_for('logs.report_by_page') }}" class="btn btn-primary">Отчет по страницам</a>
+    <a href="{{ url_for('logs.report_by_user') }}" class="btn btn-primary">Отчет по пользователям</a>
+</p>
+{% endif %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Пользователь</th>
+            <th>Страница</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ loop.index + (page - 1) * 20 }}</td>
+            <td>{{ log.user_name if log.user_name else "Неаутентифицированный пользователь" }}</td>
+            <td>{{ log.path }}</td>
+            <td>{{ log.created_at.strftime('%d.%m.%Y %H:%M:%S') }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+<nav aria-label="Навигация по страницам">
+  <ul class="pagination">
+    {% for p in range(1, total_pages + 1) %}
+      <li class="page-item {% if p == page %}active{% endif %}">
+        <a class="page-link" href="{{ url_for('logs.index') }}?page={{ p }}">{{ p }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+{% endblock %}

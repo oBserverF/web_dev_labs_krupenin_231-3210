@@ -1,0 +1,49 @@
+{% macro user_form(roles, action, user_data={}, form_errors={}, current_user=None) %}
+<form method="post">
+    {% macro input_field(name, label, type='text', required=True) %}
+        {% set value = user_data[name] or '' %}
+        {% set error = form_errors.get(name) %}
+        <div class="mb-3 has-validation">
+            <label for="{{ name }}" class="form-label">{{ label }}</label>
+            <input type="{{ type }}" name="{{ name }}" id="{{ name }}"
+                   class="form-control {% if error %}is-invalid{% endif %}"
+                   value="{{ value }}"
+                   {% if not required %}placeholder="(необязательно)"{% endif %}
+                   aria-describedby="{{ name }}-feedback">
+            {% if error %}
+            <div id="{{ name }}-feedback" class="invalid-feedback">
+                {{ error }}
+            </div>
+            {% endif %}
+        </div>
+    {% endmacro %}
+
+    {% if action == 'new' %}
+        {{ input_field('username', 'Логин') }}
+        {{ input_field('password', 'Пароль', 'password') }}
+    {% endif %}
+
+    {{ input_field('first_name', 'Имя') }}
+    {{ input_field('middle_name', 'Отчество (опционально)', required=False) }}
+    {{ input_field('last_name', 'Фамилия') }}
+
+    {% set is_admin = current_user and current_user.role == 'admin' %}
+    <div class="mb-3">
+        <label for="role_id" class="form-label">Роль</label>
+        <select name="role_id" id="role_id" class="form-select" {% if not is_admin %}disabled{% endif %}>
+            {% for role in roles %}
+            <option value="{{ role.id }}" {% if role.id == user_data.role_id %}selected{% endif %}>
+                {{ role.name }}
+            </option>
+            {% endfor %}
+        </select>
+        {% if not is_admin %}
+            <input type="hidden" name="role_id" value="{{ user_data.role_id }}">
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+</form>
+{% endmacro %}

@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h2>Введите номер телефона</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <input type="text" name="phone" value="{{ request.form.get('phone') or '' }}" class="form-control {% if error %}is-invalid{% endif %}" placeholder="Введите номер">
+            {% if error %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Проверить</button>
+    </form>
+    {% if formatted_number %}
+        <div class="alert alert-success mt-3">Форматированный номер: {{ formatted_number }}</div>
+    {% endif %}
+{% endblock %}
+

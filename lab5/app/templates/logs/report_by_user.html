@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Отчёт по посещениям по пользователям</h1>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>№</th>
+            <th>Пользователь</th>
+            <th>Количество посещений</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in user_reports %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>
+                {% if item.first_name %}
+                    {{ item.last_name }} {{ item.first_name }}
+                {% else %}
+                    Неаутентифицированный пользователь
+                {% endif %}
+            </td>
+            <td>{{ item.visits }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('logs.export_user_report') }}" class="btn btn-primary">Экспорт в CSV</a>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <h1>Данные формы</h1>
+
+    <form method="POST">
+        <label for="">Имя</label>
+        <input type="text" name="name" value="{{ request.form.get('name') or ''}}">
+
+        <label for="">Текст</label>
+        <textarea name="text">{{ request.form.get('text') or '' }}</textarea>
+
+        <button type="submit">Отправить</button>
+    </form>
+
+    {% if request.form %}
+        <table class="table">
+            <tbody>
+                {% for k, v in request.form.items() %}
+                <tr>
+                    <td>{{ k }}</td>
+                    <td>{{ v }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
